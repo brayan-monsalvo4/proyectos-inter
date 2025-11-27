@@ -6,9 +6,11 @@
 ## Docente: Josué Pérez Romero
 
 # *Introducción*
-Este documento tiene como objetivo presentar el segundo proyecto de la materia "Intercomunicación y seguridad en redes". La idea central del trabajo fue desarrollar como primera actividad un programa que simule el funcionamiento básico de un firewall, que es como un guardia de seguridad para una red, decidiendo qué tráfico puede pasar y qué tráfico debe ser bloqueado. Para la segunda actividad, 
+La idea central del trabajo fue desarrollar como primera actividad un programa que simule el funcionamiento básico de un firewall, que es como un guardia de seguridad para una red, decidiendo qué tráfico puede pasar y qué tráfico debe ser bloqueado. La segunda actividad tiene como propósito simular un tunel VPN que encripta los mensajes entre un cliente y un servidor.
 
-En las siguientes secciones, primero vamos a explicar paso a paso cómo está estructurado este reporte para que sea fácil de seguir. Luego, en el desarrollo, nos adentraremos en el código del programa. Ahí describiremos los conceptos clave que utilizamos, como las "reglas" que definen si se permite o se deniega un paquete de datos, y cómo funciona cada parte del proceso para tomar esa decisión, desde que añadimos una regla hasta que el firewall decide el destino de un paquete simulado. Básicamente, te contaremos todo el "cómo se hizo" de una manera clara y directa.
+Se detalla el funcionamiento de las clases y sus correspondientes métodos. Además se realizan las pruebas y se muestra la evidencia del correcto funcionamiento.
+
+Finalmente, se coloca la conclusión y el aprendizaje al realizar el proyecto, así como se adjunta un enlace del repositorio con el código fuente.
 
 # *Desarrollo* 
 ## 1. Simulación de Filtrado de paquetes (Firewall 7.4.1)
@@ -278,6 +280,62 @@ La función add_esp_header es exactamente la misma en el servidor. Añade al pay
 
 ### *remove_esp_header*
 
-La función remove_esp_
+La función remove_esp_header funciona exactamente como en el servidor. Elimina la cabecera ESP del payload.
+
+```python
+    def remove_esp_header(self, data):
+        return data[8:]
+``` 
+
+### *main*
+
+La función main crea una instancia de TunnelClient, entra en un ciclo while infinito y pide constantemente la clave para encriptar. Dicha clave la proporciona el servidor, solicita un mensaje mediante terminal y lo manda al servidor. Si la clave entre el cliente y servidor es la misma, el servidor retorna el mensaje que recibió del cliente.
+
+```python
+def main():
+    client = TunnelClient()
+    
+    print("=== CLIENTE===")
+    print("Por favor, ingrese la clave proporcionada por el servidor:")
+    
+    while True:
+        try:
+            key_input = input("Clave: ").strip()
+            client.set_key(key_input.encode())
+
+            msg = str(input("Ingrese un mensaje: "))
+
+            response = client.send_message(msg)
+            time.sleep(2)
+             
+            print(f"Respuesta del servidor: {response}")
+
+        except KeyboardInterrupt:
+            print("\nCliente terminado por el usuario")
+        except Exception as e:
+            print(f"Error: {e}")
+```
+
+### Funcionamiento
+Al iniciar ambos programas, el servidor imprime la clave para encriptar y el cliente solicita una clave.
+
+![alt text](image-2.png)
+
+Al ingresar la clave y el mensaje a enviar, el servidor imprime el mensaje recibido y retorna dicho mensaje de vuelta al cliente.
+
+![alt text](image-3.png)
+
+![alt text](image-4.png)
+
+![alt text](image-5.png)
+
+En caso de que la clave no coincida. 
+
+![alt text](image-6.png)
+
 
 # *Conclusión*
+
+Un firewall es una herramienta de vital importancia en el ámbito de la seguridad en redes, ya que permite bloquear el tráfico potencialmente malicioso restringiendo los paquetes que se reciben de X dirección IP o puerto en específico. 
+
+Una VPN es una gran opción para garantizar mayor seguridad en una red, ya que permite "crear" un tunel donde los datos viajan cifrados, garantizando que solamente aquellos a quienes va dirigidos la información puedan leerla y no terceras personas con intenciones maliciosas.
