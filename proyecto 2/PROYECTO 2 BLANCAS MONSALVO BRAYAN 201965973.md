@@ -3,7 +3,7 @@
 ## Nombre de la materia: Intercomunicación y seguridad en redes
 ## Alumno: Brayan Blancas Monsalvo
 ## Matricula: 201965973
-## Docente: Josué Pérez Romero
+## Docente: Josué Pérez Romero  
 
 # *Introducción*
 La idea central del trabajo fue desarrollar como primera actividad un programa que simule el funcionamiento básico de un firewall, que es como un guardia de seguridad para una red, decidiendo qué tráfico puede pasar y qué tráfico debe ser bloqueado. La segunda actividad tiene como propósito simular un tunel VPN que encripta los mensajes entre un cliente y un servidor.
